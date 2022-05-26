@@ -1,7 +1,18 @@
 name: 'netlify-plugin-webpagetest'
-inputs: []
-# Example inputs:
-#  - name: example
-#    description: Example description
-#    default: 5
-#    required: false
+inputs:
+  - name: location
+    required: false
+    description: location to test from
+    default: 'Dulles:Chrome'
+
+  - name: connectivity
+    required: false
+    description:
+      connectivity profile -- requires location to be specified --
+      (Cable|DSL|3GSlow|3G|3GFast|4G|LTE|Edge|2G|Dial|FIOS|Native|custom)
+    default: 'Cable'
+
+  - name: firstViewOnly
+    required: false
+    description: Skips the Repeat View test if true
+    default: 'true'
