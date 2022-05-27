@@ -16,3 +16,24 @@ inputs:
     required: false
     description: Skips the Repeat View test if true
     default: 'true'
+
+  - name: runs
+    required: false
+    description: Number of test runs
+
+  - name: emulateMobile
+    required: false
+    description: Emulate mobile browser
+
+  - name: block
+    required: false
+    description: space-delimited list of urls to block (substring match)
+
+  - name: lighthouse
+    required: false
+    description:
+      Boolean, Perform lighthouse test (Chrome only, Linux agent only)
+
+  - name: throttleCPU
+    required: false
+    description: Custom Cpu Throttling

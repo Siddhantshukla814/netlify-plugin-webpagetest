@@ -3,20 +3,25 @@ const { runTest } = require('./wptHelpers')
 
 module.exports = {
   onPostBuild: async ({ netlifyConfig, inputs }) => {
-    console.log(inputs.location.location)
     console.log('🔥🔥Warming Up The WebPageTest🔥🔥')
     const wpt = new WebPageTest(
       'https://www.webpagetest.org',
       netlifyConfig.build.environment.WPT_API_KEY,
     )
     const url = netlifyConfig.build.environment.DEPLOY_PRIME_URL
+
     let options = {
-      location: inputs.location.location,
-      firstViewOnly: inputs.firstViewOnly.firstViewOnly,
-      connectivity: inputs.connectivity.connectivity,
-      runs: 1,
+      location: inputs.options.location,
+      firstViewOnly: inputs.options.firstViewOnly,
+      connectivity: inputs.options.connectivity,
+      runs: inputs.options.runs,
+      emulateMobile: inputs.options.emulateMobile,
+      block: inputs.options.block,
+      lighthouse: inputs.options.lighthouse,
+      throttleCPU: inputs.options.throttleCPU,
       pollResults: 5,
     }
+
     console.log('WPT Test Started 💨💨💨')
     await runTest(wpt, url, options)
       .then(async (test) => {
@@ -39,6 +44,9 @@ module.exports = {
             FCP: test.result.data.average.firstView['firstContentfulPaint'],
             LCP: test.result.data.average.firstView[
               'chromeUserTiming.LargestContentfulPaint'
+            ],
+            CLS: test.result.data.average.firstView[
+              'chromeUserTiming.CumulativeLayoutShift'
             ],
             CLS: test.result.data.average.firstView[
               'chromeUserTiming.CumulativeLayoutShift'

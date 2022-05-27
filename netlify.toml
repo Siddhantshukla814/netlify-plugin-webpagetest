@@ -7,13 +7,17 @@
 # Use the current plugin in builds for testing and debugging.
 # Local path to the plugin.
 package = "."
+
   # Plugin configuration
-    [plugins.inputs.location]
+    [plugins.inputs.options]
     location = "Dulles:Chrome"
-    [plugins.inputs.connectivity]
     connectivity = "3G"
-    [plugins.inputs.firstViewOnly]
     firstViewOnly = "true"
+    runs = "1"
+    emulateMobile = "true"
+    block = "https://www.adblock.com"
+    lighthouse = "true"
+    throttleCPU = "10"
 
 
 [build]
