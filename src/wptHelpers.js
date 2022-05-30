@@ -1,18 +1,17 @@
 exports.runTest = (wpt, url, options) => {
-  const tempOptions = JSON.parse(JSON.stringify(options));
+  const tempOptions = JSON.parse(JSON.stringify(options))
   return new Promise((resolve, reject) => {
-    console.info(`Submitting test for ${url}`);
+    console.info(`Submitting test for ${url}`)
     wpt.runTest(url, tempOptions, async (err, result) => {
       try {
-        if (result) {
-          return resolve({ result: result, err: err });
+        if (!err) {
+          return resolve({ result: result })
         } else {
-          console.log(err);
-          return reject(err);
+          return reject(err)
         }
       } catch (e) {
-        console.info(e);
+        console.info(e)
       }
-    });
-  });
-};
+    })
+  })
+}

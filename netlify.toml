@@ -8,23 +8,17 @@
 # Local path to the plugin.
 package = "."
 
-  # Plugin configuration
-    [plugins.inputs.options]
-    location = "Dulles:Chrome"
-    connectivity = "3G"
-    firstViewOnly = "true"
-    runs = "1"
-    emulateMobile = "true"
-    block = "https://www.adblock.com"
-    lighthouse = "true"
-    throttleCPU = "10"
+  # Plugin configuration Sample
+    #[plugins.inputs]
+    #location = "Dulles:Chrome"
+    #connectivity = "3G"
+    #firstViewOnly = "true"
+    #runs = "1"
+    #emulateMobile = "true"
+    #block = "https://www.adblock.com"
+    #lighthouse = "true"
+    #throttleCPU = "10"
+    #specs = '{"average": {"firstView": {"chromeUserTiming.CumulativeLayoutShift": 0.1,"chromeUserTiming.LargestContentfulPaint": 2500,"firstContentfulPaint": 2000,"TotalBlockingTime": 0.1}}}'
 
-
-[build]
-# Dummy build command
-command = "echo onBuild"
-
-[build.environment]
-NODE_VERSION = "12.20.0"
 
  
