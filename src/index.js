@@ -7,7 +7,13 @@ module.exports = {
 
     const wpt = new WebPageTest("https://www.webpagetest.org", netlifyConfig.build.environment.WPT_API_KEY);
 
-    const url = netlifyConfig.build.environment.DEPLOY_PRIME_URL;
+    const urlToTest = inputs.urls
+      ? inputs.urls.length > 0
+        ? inputs.urls.replaceAll(" ", "").split(",")
+        : [netlifyConfig.build.environment.DEPLOY_PRIME_URL]
+      : [netlifyConfig.build.environment.DEPLOY_PRIME_URL];
+
+    const finalResults = [];
 
     let options = {
       pollResults: 5,
@@ -27,35 +33,45 @@ module.exports = {
 
     console.log("WPT Test Started 💨💨💨");
 
-    await runTest(wpt, url, options)
-      .then((test) => {
-        console.log("Config: ⬇️");
-        console.log({
-          Test_ID: test.result.data.id,
-          Full_WebPageTest_Results: test.result.data.summary,
-          Test_Location: test.result.data.location,
-          Test_Origin: test.result.data.from,
-          Connectivity: test.result.data.connectivity,
-        });
-        console.log("Your Scores Are Here: ⬇️");
-        console.log({
-          TTFB: test.result.data.average.firstView["TTFB"],
-          StartRender: test.result.data.average.firstView["chromeUserTiming.LargestContentfulPaint"],
-          FCP: test.result.data.average.firstView["firstContentfulPaint"],
-          LCP: test.result.data.average.firstView["chromeUserTiming.LargestContentfulPaint"],
-          CLS: test.result.data.average.firstView["chromeUserTiming.CumulativeLayoutShift"],
-          CLS: test.result.data.average.firstView["chromeUserTiming.CumulativeLayoutShift"],
-          TBT: test.result.data.average.firstView["TotalBlockingTime"],
-          Full_WebPageTest_Results: test.result.data.summary,
-        });
+    await Promise.all(
+      urlToTest.map(async (url) => {
+        await runTest(wpt, url, options)
+          .then((test) => {
+            finalResults.push({
+              SEC1: "Config: ⬇️",
+              Test_URL: test.result.data.id,
+              Test_ID: test.result.data.url,
+              Full_WebPageTest_Results: test.result.data.summary,
+              Test_Location: test.result.data.location,
+              Test_Origin: test.result.data.from,
+              Connectivity: test.result.data.connectivity,
+              SEC2: "Scores: ⬇️",
+              TTFB: test.result.data.average.firstView["TTFB"],
+              StartRender: test.result.data.average.firstView["chromeUserTiming.LargestContentfulPaint"],
+              FCP: test.result.data.average.firstView["firstContentfulPaint"],
+              LCP: test.result.data.average.firstView["chromeUserTiming.LargestContentfulPaint"],
+              CLS: test.result.data.average.firstView["chromeUserTiming.CumulativeLayoutShift"],
+              CLS: test.result.data.average.firstView["chromeUserTiming.CumulativeLayoutShift"],
+              TBT: test.result.data.average.firstView["TotalBlockingTime"],
+              Full_WebPageTest_Results: test.result.data.summary,
+            });
+          })
+          .catch((error) => {
+            if (error.statusCode == 400) {
+              console.log(error);
+              utils.build.cancelBuild("Please Update Your API KEY", { error });
+            } else {
+              utils.build.cancelBuild("Perf Budget failed", { error });
+            }
+          });
       })
-      .catch((error) => {
-        if (error.statusCode == 400) {
-          console.log(error);
-          utils.build.cancelBuild("Please Update Your API KEY", { error });
-        } else {
-          utils.build.cancelBuild("Perf Budget failed", { error });
-        }
+    )
+      .then(() => {
+        console.log(finalResults);
+      })
+      .catch((err) => {
+        console.log("Retry there is some error");
+        console.log(err);
       });
   },
 };

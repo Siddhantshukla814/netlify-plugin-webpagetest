@@ -9,7 +9,8 @@
 package = "."
 
   # Plugin configuration Sample
-    #[plugins.inputs]
+    [plugins.inputs]
+    #urls = "https://www.example1.com, https://www.example2.com"
     #location = "Dulles:Chrome"
     #connectivity = "3G"
     #firstViewOnly = "true"
