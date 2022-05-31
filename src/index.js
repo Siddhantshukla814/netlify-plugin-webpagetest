@@ -39,8 +39,8 @@ module.exports = {
           .then((test) => {
             finalResults.push({
               SEC1: "Config: ⬇️",
-              Test_URL: test.result.data.id,
-              Test_ID: test.result.data.url,
+              Test_URL: test.result.data.url,
+              Test_ID: test.result.data.id,
               Full_WebPageTest_Results: test.result.data.summary,
               Test_Location: test.result.data.location,
               Test_Origin: test.result.data.from,
